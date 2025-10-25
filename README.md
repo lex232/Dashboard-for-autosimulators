@@ -30,5 +30,6 @@
     └── porsche_cluster_arduino.ino
 ├── files - разные файлы, схемы и т.д.
 ├── requirements.txt - зависимости для старта python скрипта
+├── run_dashboard.bat - файл для быстрого запуска скрипта
 └── README.md - описание проекта
 </pre>

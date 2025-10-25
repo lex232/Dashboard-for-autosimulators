@@ -114,6 +114,8 @@ int buttonState3 = 0;
 int buttonState4 = 0;
 int buttonState5 = 0;
 
+uint64_t input_value = 0;
+uint8_t buf[5];
 
 // CAN фреймы
 uint8_t ignition_frame_on[8] = {0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -473,24 +475,6 @@ void canSend(){
   }
 }
 
-// Получаем данные из серийного порта через индекс и разделитель :
-// get value from serial port by separator and index
-String getValue(String data, char separator, int index)
-{
-    int found = 0;
-    int strIndex[] = { 0, -1 };
-    int maxIndex = data.length() - 1;
-
-    for (int i = 0; i <= maxIndex && found <= index; i++) {
-        if (data.charAt(i) == separator || i == maxIndex) {
-            found++;
-            strIndex[0] = strIndex[1] + 1;
-            strIndex[1] = (i == maxIndex) ? i+1 : i;
-        }
-    }
-    return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
-}
-
 void setup() {
     SERIAL_PORT_MONITOR.begin(115200);
     SERIAL_PORT_MONITOR.setTimeout(50);
@@ -526,29 +510,19 @@ void loop() {
   unsigned char stmp2[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x8a, 0x00, 0x00};
   CAN.sendMsgBuf(0x663, 0, 8, stmp2); // battery voltage
   //------------------------------------------
-
-  // Этот блок принимает данные на серийный порт, от игр.
-  // Для тестирования это все можно закомментировать
-  // ---------------------------------------
-  if (SERIAL_PORT_MONITOR.available() > 0) {
-     // Читаем полученные данные и сохраняем их в переменной
-     String receivedData = SERIAL_PORT_MONITOR.readString();
-     // Отправляем ответ обратно в Serial порт
-    temp_speed = getValue(receivedData, ':', 0);
-    temp_rpm = getValue(receivedData, ':', 1);
-    temp_gear = getValue(receivedData, ':', 2);
-    temp_esp = getValue(receivedData, ':', 3);
-    s_gear = temp_gear.toInt();
-    s_speed = temp_speed.toInt();
-    s_rpm = temp_rpm.toInt();
-    s_esp = temp_esp.toInt();
-  // ---------------------------------------
-
-
-// String yval = getValue(myString, ':', 1);
-//     SERIAL_PORT_MONITOR.println(receivedData);
-//     SERIAL_PORT_MONITOR.println(temp_speed);
- }
+  
+  // Этот блок принимает данные на серийный порт от телеметрии.
+  if (SERIAL_PORT_MONITOR.available() >= 6) {
+    if (SERIAL_PORT_MONITOR.read() == 0xAA) {
+      // Читаем полученные данные и сохраняем их в переменные
+      SERIAL_PORT_MONITOR.readBytes(buf, 5);
+      for (int i = 0; i < 5; i++) {
+          input_value = (input_value << 8) | buf[i];
+      }
+      s_speed = (input_value >> 24) & 0x3FF;
+      s_rpm   = (input_value >> 7)  & 0x1FFFF;
+      s_gear  = input_value & 0x7F;      
+    }
+  }
 }
-
 // END FILE
