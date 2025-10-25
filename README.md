@@ -33,3 +33,53 @@
 ├── run_dashboard.bat - файл для быстрого запуска скрипта
 └── README.md - описание проекта
 </pre>
+
+## Инструкции по запуску проекта
+
+- Прошить Arduino Uno прошивкой:
+```
+.../porsche_cluster_arduino/porsche_cluster_arduino.ino
+```
+
+- Клонировать репозиторий в командной строке (на ПК):
+```
+git clone https://github.com/lex232/Dashboard-for-autosimulators.git
+```
+- Перейдите в скачанную директорию:
+```
+cd Dashboard-for-autosimulators
+```
+- Cоздайте виртуальное окружение. В системе должен быть установлен интерпретатор языка Python
+- Вместо команды `python` возможны также варианты: `python3` или `py`
+```
+python -m venv venv
+```
+- Активировать виртуальное окружение на ОС Linux:
+```
+source venv/bin/activate
+```
+- Активировать виртуальное окружение на ОС Windows:
+```
+venv/Scripts/activate
+```    
+- Ообновить пакетный менеджер
+```
+python -m pip install --upgrade pip
+```
+- Установить зависимости из файла requirements.txt:
+```
+pip install -r requirements.txt
+```    
+- Переименовать .env.example -> .env и изменить номер COM-порта на свой:
+```
+COM='x'
+```    
+- Перейти в папку asetto_corsa:
+```
+cd asetto_corsa
+```    
+- Запустить скрипт (игра уже должна быть начата):
+```
+python assetto_corsa_telemetry_reader.py
+```    
+
