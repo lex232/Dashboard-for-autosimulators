@@ -23,13 +23,16 @@
 
 Структура проекта
 <pre>
-├── assetto_corsa - интеграция с Assetto Corsa 
-    ├── assetto_corsa_telemetry_reader.py - скрипт для телеметрии 
-    └── data_example_assetto_corsa.txt - формат данных в памяти
+├── telemetry - скрипты для сбора телеметрии и отправка на dash
+    ├── games - доступные ингры
+        ├── asetto_corsa.py - сбор данных Asetto Corsa
+        ├── fh5.py - сбор данных из памяти Forza Horizon 5
+        └── data_example_assetto_corsa.txt - формат данных в памяти
 ├── porsche_cluster_arduino - код для Arduino
     └── porsche_cluster_arduino.ino
 ├── files - разные файлы, схемы и т.д.
 ├── requirements.txt - зависимости для старта python скрипта
+├── env.example - env проекта
 ├── run_dashboard.bat - файл для быстрого запуска скрипта
 └── README.md - описание проекта
 </pre>
@@ -70,16 +73,21 @@ python -m pip install --upgrade pip
 ```
 pip install -r requirements.txt
 ```    
-- Переименовать .env.example -> .env и изменить номер COM-порта на свой:
+- Переименовать .env.example -> .env и изменить номер COM-порта на свой, также выбрать игру:
 ```
 COM='x'
+GAME='ASETTO_CORSA'
 ```    
 - Перейти в папку asetto_corsa:
 ```
-cd asetto_corsa
+cd telemetry
 ```    
 - Запустить скрипт (игра уже должна быть начата):
 ```
-python assetto_corsa_telemetry_reader.py
+python telemetry_reader.py
+```    
+- Или: Настроить файл для быстрого запуска
+```
+run_dashboard.bat
 ```    
 
