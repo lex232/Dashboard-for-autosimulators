@@ -2,21 +2,7 @@
 Some modified for transmit to CAN Shield Arduino (Seeed studio)"""
 import json
 import mmap
-import os
 import struct
-import time
-
-from dotenv import load_dotenv, set_key
-import serial
-
-dotenv_path = ".env"
-load_dotenv(dotenv_path)
-COM_PORT = os.environ.get("COM")
-START = b'\xAA'
-
-def convertDegreeArcToPercent(value):
-    return max(value/360, 0)
-
 
 class AssettoCorsaData(object):
     def __init__(self):
@@ -59,13 +45,16 @@ class AssettoCorsaData(object):
         self.mmapPhysic = None
         self.mmapStatic = None
 
+    def convertDegreeArcToPercent(self, value):
+        return max(value / 360, 0)
+
     def start(self):
         print('AssettoCorsaData() start()')
         if not self.mmapPhysic:
             self.mmapPhysic = mmap.mmap(-1, self.physics_shm_size, "Local\\acpmf_physics",  access=mmap.ACCESS_READ)
         # self.mmapStatic = mmap.mmap(-1, XYZ, u"Local\\acpmf_static")
 
-    def getData(self):
+    def get_data(self):
         self.mmapPhysic.seek(0)
         rawData = self.mmapPhysic.read(self.physics_shm_size)
         data = {}
@@ -96,36 +85,5 @@ class AssettoCorsaData(object):
                 'suspensionTravel']:
             data[newName] = []
             for oldName in [newName + 'FL', newName+'FR', newName+'RL', newName+'RR']:
-                data[newName].append(convertDegreeArcToPercent(data[oldName]))
+                data[newName].append(self.convertDegreeArcToPercent(data[oldName]))
                 del data[oldName]
-
-
-def pack_to_bytes(speed, rpm, gear):
-    packed = (speed << 24) | (rpm << 7) | gear
-    return START + packed.to_bytes(5, byteorder='big')
-
-
-if __name__ == '__main__':
-    assettoReader = AssettoCorsaData()
-    assettoReader.start()
-    connected = False
-    while not connected:
-        try:
-            print(f"connecting to COM-{COM_PORT}")
-            ser = serial.Serial(f'COM{COM_PORT}', 115200)
-            connected = True
-        except serial.serialutil.SerialException:
-            com_input = input(f"Failed to connect to COM-{COM_PORT}\nEnter COM port (number only): ")
-            COM_PORT = com_input
-
-    if connected:
-        set_key(dotenv_path, "COM", COM_PORT)
-
-    while True:
-        telemetry = assettoReader.getData()
-        speed = int(telemetry.get("speed"))
-        rpm = int(telemetry.get("rpm"))
-        gear = int(telemetry.get("gear"))
-        data = pack_to_bytes(speed, rpm, gear)
-        ser.write(data)
-        time.sleep(0.02)
