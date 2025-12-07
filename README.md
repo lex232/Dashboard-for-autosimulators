@@ -31,6 +31,7 @@
         ├── fh5.py - сбор данных из памяти Forza Horizon 5
         ├── data_example_fh5.txt - формат данных в памяти Forza Horizon 5
         └── data_example_assetto_corsa.txt - формат данных в памяти AsettoCorsa
+    └── telemetry_reader.py - общий скрипт для запуска телеметрии
 ├── porsche_cluster_arduino - код для Arduino
     └── porsche_cluster_arduino.ino
 ├── files - разные файлы, схемы и т.д.
