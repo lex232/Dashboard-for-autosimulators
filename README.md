@@ -1,10 +1,12 @@
 ## Адаптация приборной панели Porsche 970 рестайлинг для автосимуляторов 
-## Porsche cluster (car dashboard) Panamera 970/ Cayenne for Assetto Corsa auto-simulator
-Отображаем данные из игры на реальной приборной панели от Porsche Panamera 970 рестайлинг (от Cayenne также должна подойти)
+## Porsche cluster (car dashboard) Panamera 970/ Cayenne for simracing games 
+Отображаем данные из игр на реальной приборной панели от Porsche Panamera 970 рестайлинг (от Cayenne также должна подойти)
 
 ## Поддержка игр сейчас
 - Assetto Corsa<br></br>
 ![](files/game_assetto.jpg)  
+- Forza Horizon 5<br></br>
+![](files/game_fh5.jpg)  
 
 ## Материалы, которые очень помогли
 - За основу для Arduino + Can shield взят код -  [Arduino Porsche Cluster](https://github.com/VintageCollector/cluster-dashboard-ets2-ats/tree/Porsche-Panamera-970)
@@ -27,7 +29,8 @@
     ├── games - доступные ингры
         ├── asetto_corsa.py - сбор данных Asetto Corsa
         ├── fh5.py - сбор данных из памяти Forza Horizon 5
-        └── data_example_assetto_corsa.txt - формат данных в памяти
+        ├── data_example_fh5.txt - формат данных в памяти Forza Horizon 5
+        └── data_example_assetto_corsa.txt - формат данных в памяти AsettoCorsa
 ├── porsche_cluster_arduino - код для Arduino
     └── porsche_cluster_arduino.ino
 ├── files - разные файлы, схемы и т.д.
@@ -78,7 +81,7 @@ pip install -r requirements.txt
 COM='x'
 GAME='ASETTO_CORSA'
 ```    
-- Перейти в папку asetto_corsa:
+- Перейти в папку telemetry:
 ```
 cd telemetry
 ```    

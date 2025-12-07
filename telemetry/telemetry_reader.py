@@ -51,9 +51,14 @@ if __name__ == '__main__':
 
     while True:
         telemetry = TelemetryReaderInstance.get_data()
-        speed = int(telemetry.get("speed"))
-        rpm = int(telemetry.get("rpm"))
-        gear = int(telemetry.get("gear"))
+        try:
+            speed = int(telemetry.get("speed"))
+            rpm = int(telemetry.get("rpm"))
+            gear = int(telemetry.get("gear"))
+        except:
+            speed = 0
+            rpm = 0
+            gear = 0
         print(speed, rpm, gear)
         data = pack_to_bytes(speed, rpm, gear)
         ser.write(data)

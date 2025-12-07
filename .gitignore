@@ -39,4 +39,6 @@ yarn-debug.log*
 yarn-error.log*
 
 /frontend/package-lock.json
+/telemetry/__pycache__/
+/telemetry/__pycache__
 package-lock.json
